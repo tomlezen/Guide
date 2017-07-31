@@ -124,7 +124,7 @@ fun ViewEditor<TextView>.textColor(color: Int): ViewEditor<TextView> {
 }
 
 fun ViewEditor<TextView>.textSize(@DimenRes size: Int): ViewEditor<TextView> {
-    view.setTextSize(TypedValue.COMPLEX_UNIT_SP, view.resources.getDimension(size))
+    view.setTextSize(TypedValue.COMPLEX_UNIT_PX, view.resources.getDimension(size))
     return this
 }
 

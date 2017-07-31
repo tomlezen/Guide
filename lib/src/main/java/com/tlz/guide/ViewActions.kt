@@ -171,6 +171,7 @@ class ViewActions internal constructor(private val guide: Guide, private val vie
         withDefaultAnchorViewOnPreDraw {
             val rect = Rect()
             this@ViewActions.view.getGlobalVisibleRect(rect)
+            var isCustom = false
             when (editor.shape) {
                 is RightRect -> {
                     val x = rect.left + editor.padding
@@ -182,18 +183,25 @@ class ViewActions internal constructor(private val guide: Guide, private val vie
                 is Circle -> {
                     val cx = rect.centerX()
                     val cy = rect.centerY() - statusBarOffset
-                    editor.shape.applySize(cx.toFloat(), cy.toFloat(), (Math.max(rect.width(), rect.height()) / 2f - editor.padding))
+                    val radius = Math.max(rect.width(), rect.height()) / 2f
+                    editor.shape.applySize(cx.toFloat(), cy.toFloat(), Math.sqrt(radius * radius * 2.0).toFloat() - editor.padding)
+                }
+                else -> {
+                    isCustom = true
+                    (editor as CustomShapeViewEditor).onPreDraw(rect)
                 }
             }
             guide.guideView.addShape(editor.shape)
-            val width = rect.width() * (editor.additionalRatio + 1)
-            val height = rect.height() * (editor.additionalRatio + 1)
-            val x = rect.left - (width - rect.width()) / 2
-            val y = rect.top - (height - rect.height()) / 2 - getShapeOffset()
-            view.layoutParams.width = width.toInt()
-            view.layoutParams.height = height.toInt()
-            view.translationY = y
-            view.translationX = x
+            if (!isCustom) {
+                val width = rect.width() * (editor.additionalRatio + 1)
+                val height = rect.height() * (editor.additionalRatio + 1)
+                val x = rect.left - (width - rect.width()) / 2
+                val y = rect.top - (height - rect.height()) / 2 - getShapeOffset()
+                view.layoutParams.width = width.toInt()
+                view.layoutParams.height = height.toInt()
+                view.translationY = y
+                view.translationX = x
+            }
             guide.addIntoViews(view)
             guide.container.addView(view)
         }

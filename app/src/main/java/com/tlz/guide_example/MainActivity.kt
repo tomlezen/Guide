@@ -1,12 +1,10 @@
 package com.tlz.guide_example
 
 import android.graphics.Color
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.View
 import com.tlz.guide.*
-import com.tlz.guide.shapes.RoundRect
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -28,11 +26,11 @@ class MainActivity : AppCompatActivity() {
                     .text("show a circle")
                     .location(Location.BOTTOM or Location.CENTER_HORIZONTAL)
                     .textColor(Color.WHITE)
-                    .textSizePx(20f)
+                    .textSize(R.dimen.font)
                     .offsetY(50)
                     .animated()
                     .end()
-                    .on(R.id.btn_round_rect)
+                    .on(btn_round_rect)
                     .displayImage()
                     .image(R.mipmap.ic_launcher)
                     .location(Location.CENTER)
