@@ -39,11 +39,17 @@ class ViewActions internal constructor(private val guide: Guide, private val vie
         return guide.showWithDelay(delayMillis)
     }
 
+    fun onClickContentView(@IdRes viewId: Int, onClickListener: View.OnClickListener): Guide {
+        return guide.onClickContentView(viewId, onClickListener)
+    }
+
     fun displayView(view: View): ViewEditor<View> = ViewEditor(view, this)
 
     fun displayText(): ViewEditor<TextView> = ViewEditor(TextView(view.context), this)
 
     fun displayImage(): ViewEditor<ImageView> = ViewEditor(ImageView(view.context), this)
+
+    fun <T : Shape> displayCustomShape(shape: T, onPreDraw: (rect: Rect) -> Unit): CustomShapeViewEditor<T> = CustomShapeViewEditor(onPreDraw, shape, View(view.context), this)
 
     fun displayCircle(): ShapeViewEditor<Circle> = ShapeViewEditor(Circle(), View(view.context), this)
 
@@ -136,7 +142,7 @@ class ViewActions internal constructor(private val guide: Guide, private val vie
                     }
 
                     val translationY = y - getViewOffset().toFloat()
-                    if(editor.animated){
+                    if (editor.animated) {
                         view.translationY = y.toFloat()
                         view.translationX = x.toFloat()
                         ViewCompat.animate(view)
@@ -147,7 +153,7 @@ class ViewActions internal constructor(private val guide: Guide, private val vie
                                     interpolator = editor.interpolator
                                 }
                                 .start()
-                    }else{
+                    } else {
                         view.translationY = translationY
                         view.translationX = x.toFloat()
                     }
@@ -227,9 +233,5 @@ class ViewActions internal constructor(private val guide: Guide, private val vie
             return statusBarOffset
         }
         return 0
-    }
-
-    fun onClickContentView(@IdRes viewId: Int, onClickListener: View.OnClickListener): Guide {
-        return guide.onClickContentView(viewId, onClickListener)
     }
 }

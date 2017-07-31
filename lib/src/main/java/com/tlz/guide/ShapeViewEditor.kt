@@ -11,7 +11,7 @@ import com.tlz.guide.shapes.Shape
  * Date: 2017/6/22.
  * Time: 11:25.
  */
-class ShapeViewEditor<out T: Shape> internal constructor(internal val shape: T, internal val view: View, internal val viewActions: ViewActions): Editor {
+open class ShapeViewEditor<out T: Shape> internal constructor(internal val shape: T, internal val view: View, internal val viewActions: ViewActions): Editor {
 
     internal var additionalRatio = 0f
     internal var padding = 0

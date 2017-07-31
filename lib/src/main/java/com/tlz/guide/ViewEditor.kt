@@ -2,9 +2,11 @@ package com.tlz.guide
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.support.annotation.DimenRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
 import android.support.annotation.StringRes
+import android.util.TypedValue
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
@@ -121,8 +123,19 @@ fun ViewEditor<TextView>.textColor(color: Int): ViewEditor<TextView> {
     return this
 }
 
-fun ViewEditor<TextView>.textSize(size: Float): ViewEditor<TextView> {
-    view.textSize = size
+fun ViewEditor<TextView>.textSize(@DimenRes size: Int): ViewEditor<TextView> {
+    view.setTextSize(TypedValue.COMPLEX_UNIT_SP, view.resources.getDimension(size))
+    return this
+}
+
+
+fun ViewEditor<TextView>.textSizePx(size: Float): ViewEditor<TextView> {
+    view.setTextSize(TypedValue.COMPLEX_UNIT_PX, size)
+    return this
+}
+
+fun ViewEditor<TextView>.textSizeSp(size: Float): ViewEditor<TextView> {
+    view.setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
     return this
 }
 

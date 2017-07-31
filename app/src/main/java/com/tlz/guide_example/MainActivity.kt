@@ -4,7 +4,9 @@ import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.tlz.guide.*
+import com.tlz.guide.shapes.RoundRect
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -26,7 +28,7 @@ class MainActivity : AppCompatActivity() {
                     .text("show a circle")
                     .location(Location.BOTTOM or Location.CENTER_HORIZONTAL)
                     .textColor(Color.WHITE)
-                    .textSize(20f)
+                    .textSizePx(20f)
                     .offsetY(50)
                     .animated()
                     .end()
@@ -59,7 +61,6 @@ class MainActivity : AppCompatActivity() {
                     .fitsSystemWindows(true)
                     .on(it)
                     .displayRoundRect()
-//                    .border()
                     .end()
                     .displayCustomText(btn_round_rect.text.toString())
                     .showWithDelay(1000)
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun ViewActions.displayCustomText(text: String): ViewActions {
-        return displayText().text(text).location(Location.BOTTOM or Location.CENTER_HORIZONTAL).textColor(Color.WHITE).textSize(15f).animated().end()
+        return displayText().text(text).location(Location.BOTTOM or Location.CENTER_HORIZONTAL).textColor(Color.WHITE).textSizePx(15f).animated().end()
     }
 
     override fun onBackPressed() {
