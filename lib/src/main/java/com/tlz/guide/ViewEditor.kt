@@ -2,10 +2,8 @@ package com.tlz.guide
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.support.annotation.DimenRes
-import android.support.annotation.DrawableRes
-import android.support.annotation.IdRes
-import android.support.annotation.StringRes
+import android.support.annotation.*
+import android.support.v4.content.ContextCompat
 import android.util.TypedValue
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -120,6 +118,11 @@ fun ViewEditor<TextView>.text(text: String): ViewEditor<TextView> {
 
 fun ViewEditor<TextView>.textColor(color: Int): ViewEditor<TextView> {
     view.setTextColor(color)
+    return this
+}
+
+fun ViewEditor<TextView>.textColorRes(@ColorRes color: Int): ViewEditor<TextView> {
+    view.setTextColor(ContextCompat.getColor(view.context, color))
     return this
 }
 
