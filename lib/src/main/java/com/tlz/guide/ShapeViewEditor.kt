@@ -72,11 +72,6 @@ open class ShapeViewEditor<out T: Shape> internal constructor(internal val shape
         return viewActions.show()
     }
 
-    override fun showWithDelay(delayMills: Long): GuideAction {
-        end()
-        return viewActions.showWithDelay(delayMills)
-    }
-
     private fun checkBorder(){
         if(shape.borderWidth < 0){
             throw IllegalArgumentException("border width must greater than equal to zero")

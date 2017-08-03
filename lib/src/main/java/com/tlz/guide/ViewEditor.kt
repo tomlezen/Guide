@@ -98,12 +98,6 @@ class ViewEditor<out T : View> internal constructor(internal val view: T, intern
         end()
         return viewActions.show()
     }
-
-    override fun showWithDelay(delayMills: Long): GuideAction {
-        end()
-        return viewActions.showWithDelay(delayMills)
-    }
-
 }
 
 fun ViewEditor<TextView>.text(@StringRes text: Int): ViewEditor<TextView> {

@@ -79,18 +79,11 @@ class Guide private constructor(activity: Activity) {
     }
 
     fun show(): GuideAction {
-        showWithDelay(0)
-        return GuideAction(this)
-    }
-
-    fun showWithDelay(delayMillis: Long): GuideAction {
-        container.postDelayed({
-            container.visibility = View.VISIBLE
-            ViewCompat.animate(container)
-                    .alpha(1f)
-                    .setDuration(container.resources.getInteger(android.R.integer.config_longAnimTime).toLong())
-                    .start()
-        }, delayMillis)
+        container.visibility = View.VISIBLE
+        ViewCompat.animate(container)
+                .alpha(1f)
+                .setDuration(container.resources.getInteger(android.R.integer.config_longAnimTime).toLong())
+                .start()
         return GuideAction(this)
     }
 

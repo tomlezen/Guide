@@ -12,6 +12,4 @@ interface Editor {
 
     fun show(): GuideAction
 
-    fun showWithDelay(delayMills: Long): GuideAction
-
 }

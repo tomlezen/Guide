@@ -20,9 +20,11 @@ class MainActivity : AppCompatActivity() {
                     .fitsSystemWindows(true)
                     .on(it)
                     .displayCircle()
+                    .id(R.id.guide_rect)
                     .border()
                     .end()
                     .displayText()
+                    .anchor(R.id.guide_rect)
                     .text("show a circle")
                     .location(Location.BOTTOM or Location.CENTER_HORIZONTAL)
                     .textColor(Color.WHITE)
@@ -61,13 +63,13 @@ class MainActivity : AppCompatActivity() {
                     .displayRoundRect()
                     .end()
                     .displayCustomText(btn_round_rect.text.toString())
-                    .showWithDelay(1000)
+                    .show()
                     .dismissWithAnyWhere()
         }
     }
 
     fun ViewActions.displayCustomText(text: String): ViewActions {
-        return displayText().text(text).location(Location.BOTTOM or Location.CENTER_HORIZONTAL).textColor(Color.WHITE).textSizePx(15f).animated().end()
+        return displayText().text(text).location(Location.BOTTOM or Location.CENTER_HORIZONTAL).textColor(Color.WHITE).textSizeSp(15f).animated().end()
     }
 
     override fun onBackPressed() {

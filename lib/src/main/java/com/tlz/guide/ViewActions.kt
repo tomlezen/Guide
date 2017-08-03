@@ -35,10 +35,6 @@ class ViewActions internal constructor(private val guide: Guide, private val vie
         return guide.show()
     }
 
-    fun showWithDelay(delayMillis: Long): GuideAction {
-        return guide.showWithDelay(delayMillis)
-    }
-
     fun onClickContentView(@IdRes viewId: Int, onClickListener: View.OnClickListener): Guide {
         return guide.onClickContentView(viewId, onClickListener)
     }
@@ -64,7 +60,7 @@ class ViewActions internal constructor(private val guide: Guide, private val vie
             }
         } else {
             withDefaultAnchorViewOnPreDraw {
-                val anchorView = guide.findViewByIdFromInner(view.id) ?: throw IllegalArgumentException("not found view by anchor id")
+                val anchorView = guide.findViewByIdFromInner(editor.anchorViewId!!) ?: throw IllegalArgumentException("not found view by anchor id")
                 anchorView.viewTreeObserver.addOnPreDrawListener(object : OnPreDrawListener {
                     override fun onPreDraw(): Boolean {
                         if (anchorView.width > 0) {
