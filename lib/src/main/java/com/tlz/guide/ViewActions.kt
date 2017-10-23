@@ -104,15 +104,15 @@ class ViewActions internal constructor(private val guide: Guide, private val vie
                             y = rect.top + editor.offsetY
                         }
                         Location.END or Location.CENTER_VERTICAL -> {
-                            x = rect.right + view.width + editor.offsetX
+                            x = rect.right + editor.offsetX
                             y = (rect.centerY().toFloat() - view.height / 2f).toInt()
                         }
                         Location.END or Location.TOP -> {
-                            x = rect.right + view.width + editor.offsetX
+                            x = rect.right + editor.offsetX
                             y = rect.top - view.height + editor.offsetY
                         }
                         Location.END or Location.BOTTOM -> {
-                            x = rect.right + view.width + editor.offsetX
+                            x = rect.right + editor.offsetX
                             y = rect.bottom + editor.offsetY
                         }
                         Location.TOP -> {
