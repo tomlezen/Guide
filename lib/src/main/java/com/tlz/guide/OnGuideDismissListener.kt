@@ -8,6 +8,6 @@ package com.tlz.guide
  */
 interface OnGuideDismissListener {
 
-    fun onDismiss()
+  fun onDismiss()
 
 }

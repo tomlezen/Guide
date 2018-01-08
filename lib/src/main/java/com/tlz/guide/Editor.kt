@@ -8,8 +8,8 @@ package com.tlz.guide
  */
 interface Editor {
 
-    fun end(): ViewActions
+  fun end(): ViewActions
 
-    fun show(): GuideAction
+  fun show(): GuideAction
 
 }

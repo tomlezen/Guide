@@ -33,7 +33,7 @@ class ViewEditor<out T : View> internal constructor(internal val view: T, intern
         return this
     }
 
-    @Deprecated("there will be caton")
+    @Deprecated("Not recommended")
     fun anchor(@IdRes id: Int): ViewEditor<T>{
         this.anchorViewId = id
         return this

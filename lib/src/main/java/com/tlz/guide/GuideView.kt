@@ -16,34 +16,34 @@ import com.tlz.guide.shapes.Shape
  */
 internal class GuideView : View {
 
-    constructor(context: Context) : this(context, null)
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+  constructor(context: Context) : this(context, null)
+  constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    var backgroundOverlayColor = Color.argb(DEFAULT_ALPHA_COLOR, 0, 0, 0)
-    var shapes = mutableListOf<Shape>()
+  var backgroundOverlayColor = Color.argb(DEFAULT_ALPHA_COLOR, 0, 0, 0)
+  private var shapes = mutableListOf<Shape>()
 
-    init {
-        isDrawingCacheEnabled = true
-        setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+  init {
+    isDrawingCacheEnabled = true
+    setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+  }
+
+  fun addShape(shape: Shape) {
+    this.shapes.add(shape)
+  }
+
+  override fun onDraw(canvas: Canvas?) {
+    super.onDraw(canvas)
+    if (canvas != null) {
+      canvas.drawColor(backgroundOverlayColor)
+      for (shape in shapes) {
+        shape.drawOn(canvas)
+      }
     }
+  }
 
-    fun addShape(shape: Shape) {
-        this.shapes.add(shape)
-    }
-
-    override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
-        if (canvas != null) {
-            canvas.drawColor(backgroundOverlayColor)
-            for (shape in shapes) {
-                shape.drawOn(canvas)
-            }
-        }
-    }
-
-    companion object {
-        val DEFAULT_ALPHA_COLOR = 200
-    }
+  companion object {
+    val DEFAULT_ALPHA_COLOR = 200
+  }
 
 }
