@@ -11,24 +11,24 @@ import android.graphics.RectF
  * Date: 2017/6/22.
  * Time: 10:56.
  */
-class RoundRect(val radius: Float): RightRect() {
+class RoundRect(private val radius: Float) : RightRect() {
 
   override
   fun drawOn(canvas: Canvas) {
     if (isDisplayBorder) {
       drawRoundedRect(canvas, (x - borderWidth), (y - borderWidth), (x + width + borderWidth), (y + height + borderWidth),
-              radius, borderPaint)
+          radius, borderPaint)
     }
     drawRoundedRect(canvas, x.toFloat(), y.toFloat(), (x + width).toFloat(), (y + height).toFloat(),
-            radius, paint)
+        radius, paint)
   }
 
   companion object {
 
     private fun drawRoundedRect(canvas: Canvas, left: Float, top: Float, right: Float,
-        bottom: Float, radius: Float, paint: Paint) {
+                                bottom: Float, radius: Float, paint: Paint) {
       var culRadius = radius
-      if(radius <= 0){
+      if (radius <= 0) {
         culRadius = (bottom - top) / 2f
       }
 

@@ -1,6 +1,5 @@
 package com.tlz.guide
 
-import android.support.annotation.IdRes
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPropertyAnimatorListenerAdapter
 import android.view.View
@@ -14,14 +13,18 @@ import android.view.ViewGroup
  */
 class GuideAction internal constructor(private val guide: Guide) {
 
-  private var onDismissListener: OnGuideDismissListener? = null
+  var isShowing = true
+    private set
+  private var cancelable = true
+  private var onDismiss: (() -> Unit)? = null
 
-  fun onDismissListener(block: () -> Unit): GuideAction {
-    onDismissListener = object : OnGuideDismissListener {
-      override fun onDismiss() {
-        block()
-      }
-    }
+  fun cancelable(cancelable: Boolean): GuideAction {
+    this.cancelable = cancelable
+    return this
+  }
+
+  fun onDismiss(onDismiss: () -> Unit): GuideAction {
+    this.onDismiss = onDismiss
     return this
   }
 
@@ -41,7 +44,7 @@ class GuideAction internal constructor(private val guide: Guide) {
               parent.removeView(view)
             }
             guide.release()
-            onDismissListener?.onDismiss()
+            onDismiss?.invoke()
           }
         }).start()
     return this
@@ -54,22 +57,14 @@ class GuideAction internal constructor(private val guide: Guide) {
     return this
   }
 
-  fun dismissWithView(@IdRes viewId: Int): GuideAction {
-    val view = guide.container.findViewById<View>(viewId)
-    view?.setOnClickListener { dismiss() }
-    return this
-  }
-
   fun onBackPress(): Boolean {
     if (isShowing) {
-      if (guide.cancelable) {
+      if (cancelable) {
         dismiss()
       }
       return true
     }
     return false
   }
-
-  var isShowing = true
 
 }

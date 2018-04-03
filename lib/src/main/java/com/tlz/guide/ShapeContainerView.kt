@@ -14,7 +14,7 @@ import com.tlz.guide.shapes.Shape
  * Date: 2017/6/22.
  * Time: 11:01.
  */
-internal class GuideView : View {
+internal class ShapeContainerView : View {
 
   constructor(context: Context) : this(context, null)
   constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -42,8 +42,12 @@ internal class GuideView : View {
     }
   }
 
+  internal fun clearShape() {
+    shapes.clear()
+  }
+
   companion object {
-    val DEFAULT_ALPHA_COLOR = 200
+    const val DEFAULT_ALPHA_COLOR = 200
   }
 
 }

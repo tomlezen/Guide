@@ -10,23 +10,23 @@ import android.graphics.Canvas
  */
 class Circle : Shape() {
 
-    private var x = 0f
-    private var y = 0f
-    private var radius = 0f
+  private var x = 0f
+  private var y = 0f
+  private var radius = 0f
 
-    fun applySize(x: Float, y: Float, radius: Float) {
-        this.x = x
-        this.y = y
-        this.radius = radius
+  fun applySize(x: Float, y: Float, radius: Float) {
+    this.x = x
+    this.y = y
+    this.radius = radius
+  }
+
+  override
+  fun drawOn(canvas: Canvas) {
+    if (isDisplayBorder) {
+      canvas.drawCircle(x, y, radius + borderWidth, borderPaint)
     }
 
-    override
-    fun drawOn(canvas: Canvas) {
-        if (isDisplayBorder) {
-            canvas.drawCircle(x, y, radius + borderWidth, borderPaint)
-        }
-
-        canvas.drawCircle(x, y, radius, paint)
-    }
+    canvas.drawCircle(x, y, radius, paint)
+  }
 
 }

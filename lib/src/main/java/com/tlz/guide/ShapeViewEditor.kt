@@ -11,13 +11,25 @@ import com.tlz.guide.shapes.Shape
  * Date: 2017/6/22.
  * Time: 11:25.
  */
-open class ShapeViewEditor<out T : Shape> internal constructor(internal val shape: T, internal val view: View, private val viewActions: ViewActions) : Editor {
+open class ShapeViewEditor<T : Shape> internal constructor(
+    internal val shape: T,
+    internal val view: View,
+    private val viewActions: ViewActions)
+  : Editor<ShapeViewEditor<T>> {
 
   internal var additionalRatio = 0f
   internal var padding = 0
+  private var onClickDismiss = false
+  private var onClick: ((View) -> Unit)? = null
 
   init {
     view.layoutParams = ViewGroup.MarginLayoutParams(100, 100)
+    view.setOnClickListener{
+      onClick?.invoke(it)
+      if(onClickDismiss){
+        viewActions.dismiss()
+      }
+    }
   }
 
   fun id(@IdRes id: Int): ShapeViewEditor<T> {
@@ -30,7 +42,8 @@ open class ShapeViewEditor<out T : Shape> internal constructor(internal val shap
     return this
   }
 
-  fun border(borderColor: Int = shape.borderColor, borderWidth: Float = shape.borderWidth): ShapeViewEditor<T> {
+  fun border(borderColor: Int = shape.borderColor, borderWidth: Float = shape.borderWidth)
+      : ShapeViewEditor<T> {
     shape.isDisplayBorder = true
     shape.borderColor = borderColor
     shape.borderWidth = borderWidth
@@ -55,10 +68,14 @@ open class ShapeViewEditor<out T : Shape> internal constructor(internal val shap
     return this
   }
 
-  fun clickListener(block: (view: View) -> Unit): ShapeViewEditor<T> {
-    view.setOnClickListener {
-      block(it)
-    }
+  override fun onClick(onClick: (view: View) -> Unit): ShapeViewEditor<T> {
+    this.onClick = onClick
+    return this
+  }
+
+  override fun onClickWithDismiss(onClick: ((View) -> Unit)?): ShapeViewEditor<T> {
+    onClickDismiss = true
+    this.onClick = onClick
     return this
   }
 

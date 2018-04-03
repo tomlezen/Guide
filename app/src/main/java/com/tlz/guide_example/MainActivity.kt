@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Gravity
+import android.widget.TextView
+import android.widget.Toast
 import com.tlz.guide.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -24,23 +26,14 @@ class MainActivity : AppCompatActivity() {
           .displayCircle()
           .id(R.id.guide_rect)
           .border()
-          .end()
-          .displayText()
-//                    .anchor(R.id.guide_rect)
-          .text("show a circle")
-          .location(Location.BOTTOM or Location.CENTER_HORIZONTAL)
-          .textColor(Color.WHITE)
-          .textSize(R.dimen.font)
-          .offsetY(50)
-          .animated()
+          .onClickWithDismiss()
           .end()
           .on(btn_round_rect)
           .displayImage()
           .image(R.mipmap.ic_launcher)
           .location(Location.CENTER)
           .animated()
-          .show()
-          .dismissWithAnyWhere()
+          .showWithAnimate()
     }
 
     btn_rect.setOnClickListener {
@@ -49,13 +42,18 @@ class MainActivity : AppCompatActivity() {
           .on(it)
           .displayRect()
           .id(R.id.guide_rect)
-          .clickListener {
-            Log.e("MainActivity", "onClick event")
+          .onClick {
+            Toast.makeText(this, "Click!", Toast.LENGTH_LONG).show()
           }
           .end()
           .displayCustomText("this is a rect")
-          .show()
-          .dismissWithView(R.id.guide_rect)
+          .location(Location.START or Location.CENTER_VERTICAL)
+          .offsetX(-10)
+          .end()
+          .showWithAnimate{
+            it.setDuration(2000)
+                .alpha(1.0f)
+          }
     }
 
     btn_round_rect.setOnClickListener {
@@ -63,21 +61,22 @@ class MainActivity : AppCompatActivity() {
           .fitsSystemWindows(true)
           .on(it)
           .displayRoundRect()
+          .id(R.id.round_rect)
           .end()
           .displayCustomText(btn_round_rect.text.toString())
-          .show()
+          .showWithAnimate()
           .dismissWithAnyWhere()
     }
   }
 
-  private fun ViewActions.displayCustomText(text: String): ViewActions =
+  private fun ViewActions.displayCustomText(text: String): ViewEditor<TextView> =
       displayText()
           .text(text)
           .location(Location.BOTTOM_INSIDE)
           .textColor(Color.WHITE)
           .textSizeSp(15f)
           .animated()
-          .end()
+
 
   override fun onBackPressed() {
     if (guideAction?.onBackPress() != true) {

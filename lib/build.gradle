@@ -6,7 +6,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 android {
   compileSdkVersion 26
-  buildToolsVersion "26.0.2"
+  buildToolsVersion '27.0.3'
 
 
   defaultConfig {
@@ -31,9 +31,9 @@ android {
 }
 
 dependencies {
-  compile parent.ext.support_v7
-  compile parent.ext.kotlin_jre
-  testCompile 'junit:junit:4.12'
+  implementation parent.ext.support_v7
+  implementation parent.ext.kotlin_jre
+  testImplementation 'junit:junit:4.12'
 }
 
 buildscript {

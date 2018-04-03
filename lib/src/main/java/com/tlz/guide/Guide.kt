@@ -5,6 +5,7 @@ import android.support.annotation.ColorInt
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 import android.support.v4.view.ViewCompat
+import android.support.v4.view.ViewPropertyAnimatorCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,35 +18,47 @@ import android.widget.FrameLayout
  * Date: 2017/6/22.
  * Time: 11:00.
  */
-class Guide private constructor(activity: Activity) {
+class Guide private constructor(private val activity: Activity) {
 
-  internal val container = FrameLayout(activity.applicationContext)
-  internal val guideView = GuideView(activity.applicationContext)
+  internal val container = FrameLayout(activity.applicationContext).apply {
+    setOnClickListener { }
+    visibility = View.GONE
+    alpha = 0f
+  }
+  internal val shapeContainer = ShapeContainerView(activity.applicationContext)
   private var fitsSystemWindows = false
-  internal var cancelable = true
   private val views = mutableMapOf<Int, View>()
 
-  init {
-    val window = activity.window
-    if (window != null) {
-      val decorView = window.decorView as ViewGroup
-      val content: ViewGroup = decorView.findViewById(android.R.id.content)
-      content.addView(container, ViewGroup.LayoutParams.MATCH_PARENT,
-          ViewGroup.LayoutParams.MATCH_PARENT)
-      this.container.addView(guideView, ViewGroup.LayoutParams.MATCH_PARENT,
-          ViewGroup.LayoutParams.MATCH_PARENT)
-      if (android.os.Build.VERSION.SDK_INT >= 16) {
-        val inflatedLayout = content.getChildAt(0)
-        this.fitsSystemWindows = inflatedLayout?.fitsSystemWindows ?: false
-      }
-      this.container.setOnClickListener { }
+  private var guideAction: GuideAction? = null
+    get() {
+      if (field == null)
+        field = GuideAction(this)
+      return field
     }
-    this.container.visibility = View.GONE
-    container.alpha = 0f
+
+  private fun initContainer(){
+    if(container.parent == null){
+      activity.window?.apply {
+        val content: ViewGroup = (decorView as ViewGroup).findViewById(android.R.id.content)
+        content.addView(this@Guide.container, ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT)
+        this@Guide.container.addView(shapeContainer, ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT)
+        if (android.os.Build.VERSION.SDK_INT >= 16) {
+          val inflatedLayout = content.getChildAt(0)
+          this@Guide.fitsSystemWindows = inflatedLayout?.fitsSystemWindows ?: false
+        }
+      }
+    }
   }
 
   fun backgroundColor(@ColorInt color: Int): Guide {
-    guideView.backgroundOverlayColor = color
+    container.setBackgroundColor(color)
+    return this
+  }
+
+  fun shapeContainerBackgroundColor(@ColorInt color: Int): Guide {
+    shapeContainer.backgroundOverlayColor = color
     return this
   }
 
@@ -54,45 +67,43 @@ class Guide private constructor(activity: Activity) {
     return this
   }
 
-  fun cancelable(cancelable: Boolean): Guide {
-    this.cancelable = cancelable
-    return this
-  }
-
-  fun contentView(@LayoutRes content: Int): Guide {
-    val child = LayoutInflater.from(guideView.context).inflate(content, container, false)
-    container.addView(child, ViewGroup.LayoutParams.MATCH_PARENT,
-        ViewGroup.LayoutParams.MATCH_PARENT)
-    return this
-  }
-
-  fun onClickContentView(id: Int, onClickListener: View.OnClickListener): Guide {
-    val view: View = container.findViewById(id)
-    view.setOnClickListener(onClickListener)
-    return this
-  }
-
   fun show(): GuideAction {
-    container.visibility = View.VISIBLE
-    ViewCompat.animate(container)
-        .alpha(1f)
-        .setDuration(container.resources.getInteger(android.R.integer.config_longAnimTime).toLong())
-        .start()
-    return GuideAction(this)
+    initContainer()
+    if (container.visibility != View.VISIBLE) {
+      container.visibility = View.VISIBLE
+      container.alpha = 1f
+    }
+    return guideAction!!
+  }
+
+  fun showWithAnimate(animate: ((ViewPropertyAnimatorCompat) -> ViewPropertyAnimatorCompat))
+      : GuideAction {
+    initContainer()
+    if (container.visibility != View.VISIBLE) {
+      container.visibility = View.VISIBLE
+      animate(ViewCompat.animate(container))
+          .start()
+    }
+    return guideAction!!
+  }
+
+  internal fun dismiss(){
+    guideAction?.dismiss()
   }
 
   private fun findViewById(@IdRes viewId: Int): View? {
-    val context = guideView.context
+    val context = shapeContainer.context
     var view: View? = null
     if (context is Activity) {
       view = context.findViewById(viewId)
     }
     return view
-
   }
 
-  fun on(@IdRes viewId: Int): ViewActions =
-      ViewActions(this, findViewById(viewId)!!, fitsSystemWindows)
+  fun on(@IdRes viewId: Int): ViewActions {
+    val view = findViewById(viewId)
+    return view?.let { on(it) } ?: throw IllegalAccessException("not find view by id")
+  }
 
   fun on(view: View): ViewActions = ViewActions(this, view, fitsSystemWindows)
 
@@ -101,7 +112,7 @@ class Guide private constructor(activity: Activity) {
       throw IllegalAccessException("repeat view id: ${view.id}")
     }
     if (view.id != -1) {
-      views.put(view.id, view)
+      views[view.id] = view
     }
   }
 
@@ -109,6 +120,13 @@ class Guide private constructor(activity: Activity) {
 
   internal fun release() {
     views.clear()
+    shapeContainer.clearShape()
+    container.removeAllViews()
+    container.setOnClickListener {  }
+    activity.window?.apply {
+      (decorView as ViewGroup).removeView(this@Guide.container)
+    }
+    guideAction = null
   }
 
   companion object {

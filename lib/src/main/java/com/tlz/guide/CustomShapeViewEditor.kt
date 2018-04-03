@@ -12,4 +12,9 @@ import com.tlz.guide.shapes.Shape
  * Date: 2017/6/22.
  * Time: 11:25.
  */
-class CustomShapeViewEditor<out T : Shape> internal constructor(internal val onPreDraw: (rect: Rect) -> Unit, shape: T, view: View, viewActions: ViewActions) : ShapeViewEditor<T>(shape, view, viewActions)
+class CustomShapeViewEditor<T : Shape> internal constructor(
+    internal val onPreDraw: (rect: Rect) -> Unit,
+    shape: T,
+    view: View,
+    viewActions: ViewActions)
+  : ShapeViewEditor<T>(shape, view, viewActions)
